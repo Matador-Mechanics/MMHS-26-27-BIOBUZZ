@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.util.Range;
  * In order for the class to do typical OpMode things (like send telemetry data) it must be passed a reference to the
  * OpMode object when it's created, so it can access all core OpMode functions.  This is illustrated below.
  *
- * In this concept sample, the hardware class file is called RobotHardware.java and it must accompany this sample OpMode.
+ * In this concept sample, the hardware class file is called RobotHardware.java, and it must accompany this sample OpMode.
  * So, if you copy ConceptExternalHardwareClass.java into TeamCode (using Android Studio or OnBotJava) then RobotHardware.java
  * must also be copied to the same location (maintaining its name).
  *
