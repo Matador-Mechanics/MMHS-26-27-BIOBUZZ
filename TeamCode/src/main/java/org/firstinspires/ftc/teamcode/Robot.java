@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
@@ -18,15 +19,15 @@ import java.util.Arrays;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Robot {
-    private OpMode OpMode = null; // gain access to methods in the calling OpMode.
+    private OpMode OpMode; // gain access to methods in the calling OpMode.
     private HardwareMap HardwareMap = null;
     private Telemetry Telemetry = null;
 
     // Define Motor and Servo objects
-    private MotorEx lF = null;
-    private MotorEx lB = null;
-    private MotorEx rF = null;
-    private MotorEx rB = null;
+    private MotorEx fL = null;
+    private MotorEx bL = null;
+    private MotorEx fR = null;
+    private MotorEx bR = null;
     private MotorEx pL = null;
     private ServoEx pLD = null;
     private ServoEx pLH = null;
@@ -37,21 +38,13 @@ public class Robot {
     private ServoEx iB = null;
     public GoBildaPinpointDriver pinpoint = null;
 
-
     private final int HDHexBaseSpeed = 6000;
     private final double DriveGearRatio = (1 / 5.0);
+    @SuppressWarnings("PointlessArithmeticExpression")
     private final double LauncherGearRatio = (1 / 1.0);
     private final double IntakeGearRatio = (1 / 5.0);
 
-    Utils.BilinearLUT pollenAngleLut = new Utils.BilinearLUT(
-            new double[]{0.0, 10.0, 20.0}, //X-Values
-            new double[]{0.0, 5.0, 10.0},  //Y-Values
-            new double[][]{                //Output Values
-                    {0.0, 5.0, 10.0},  //1st x
-                    {10.0, 15.0, 20.0},  //2nd x
-                    {20.0, 25.0, 30.0}});//3rd x
-    //more rows are more y's, more columns are more x's
-
+    private MecanumDrive mecanumDrive = null;
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
     public Robot(LinearOpMode opmode) {
@@ -67,25 +60,25 @@ public class Robot {
         Telemetry = OpMode.telemetry;
 
         // Define and Initialize Motors (note: need to use reference to actual OpMode).
-        lF = new MotorEx(HardwareMap, "leftFront", 28, HDHexBaseSpeed * DriveGearRatio);
-        lF.setRunMode(Motor.RunMode.RawPower);
-        lF.setInverted(false);
-        lF.resetEncoder();
+        fL = new MotorEx(HardwareMap, "frontLeft", 28, HDHexBaseSpeed * DriveGearRatio);
+        fL.setRunMode(Motor.RunMode.RawPower);
+        fL.setInverted(false);
+        fL.resetEncoder();
 
-        lB = new MotorEx(HardwareMap, "leftBack", 28, HDHexBaseSpeed * DriveGearRatio);
-        lB.setRunMode(Motor.RunMode.RawPower);
-        lB.setInverted(false);
-        lB.resetEncoder();
+        bL = new MotorEx(HardwareMap, "backLeft", 28, HDHexBaseSpeed * DriveGearRatio);
+        bL.setRunMode(Motor.RunMode.RawPower);
+        bL.setInverted(false);
+        bL.resetEncoder();
 
-        rF = new MotorEx(HardwareMap, "rightFront", 28, HDHexBaseSpeed * DriveGearRatio);
-        rF.setRunMode(Motor.RunMode.RawPower);
-        rF.setInverted(false);
-        rF.resetEncoder();
+        fR = new MotorEx(HardwareMap, "frontRight", 28, HDHexBaseSpeed * DriveGearRatio);
+        fR.setRunMode(Motor.RunMode.RawPower);
+        fR.setInverted(false);
+        fR.resetEncoder();
 
-        rB = new MotorEx(HardwareMap, "rightBack", 28, HDHexBaseSpeed * DriveGearRatio);
-        rB.setRunMode(Motor.RunMode.RawPower);
-        rB.setInverted(false);
-        rB.resetEncoder();
+        bR = new MotorEx(HardwareMap, "backRight", 28, HDHexBaseSpeed * DriveGearRatio);
+        bR.setRunMode(Motor.RunMode.RawPower);
+        bR.setInverted(false);
+        bR.resetEncoder();
 
         pL = new MotorEx(HardwareMap, "pollenLauncher", 28, HDHexBaseSpeed * LauncherGearRatio);
         pL.setRunMode(MotorEx.RunMode.VelocityControl);
@@ -121,13 +114,21 @@ public class Robot {
         pinpoint.resetPosAndIMU();
         pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
 
+        mecanumDrive = new MecanumDrive(fL, fR, bL, bR);
+
         Telemetry.addData(">", "Hardware Initialized");
         Telemetry.update();
     }
 
     public class Subsystem {
-        public class Drivetrain {
 
+        public class Drivetrain {
+            public void Field(double strafe, double forward, double turn) {
+                mecanumDrive.driveFieldCentric(strafe, forward, turn, pinpoint.getHeading(AngleUnit.DEGREES));
+            }
+            public void Robot(double strafe, double forward, double turn) {
+                mecanumDrive.driveRobotCentric(strafe, forward, turn);
+            }
         }
 
         public class Intake {
@@ -135,17 +136,44 @@ public class Robot {
         }
 
         public class NectarLauncher {
+            private final Utils.BilinearLUT nectarAngleLut = new Utils.BilinearLUT(
+                    new double[]{0.0, 10.0, 20.0}, //X-Values
+                    new double[]{0.0, 5.0, 10.0},  //Y-Values
+                    new double[][]{                //Output Values
+                            {0.0, 5.0, 10.0},  //1st x
+                            {10.0, 15.0, 20.0},  //2nd x
+                            {20.0, 25.0, 30.0}});//3rd x
+            //more rows are more y's, more columns are more x's
 
+            public void target() {
+                //if inBounds
+                double Theta = nectarAngleLut.interpolate(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH));
+                nLH.set(Theta);
+                //else
+                //aim towards center
+            }
         }
 
         public class PollenLauncher {
-            //if inBounds
-            double Theta = pollenAngleLut.interpolate(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH));
-            pLH.set(Theta);
-            //else
-            //aim towards center
+            private final Utils.BilinearLUT pollenAngleLut = new Utils.BilinearLUT(
+                    new double[]{0.0, 10.0, 20.0}, //X-Values
+                    new double[]{0.0, 5.0, 10.0},  //Y-Values
+                    new double[][]{                //Output Values
+                            {0.0, 5.0, 10.0},  //1st x
+                            {10.0, 15.0, 20.0},  //2nd x
+                            {20.0, 25.0, 30.0}});//3rd x
+            //more rows are more y's, more columns are more x's
+
+            public void target() {
+                //if inBounds
+                double Theta = pollenAngleLut.interpolate(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH));
+                pLH.set(Theta); //all of this is temporary and not an actual equation
+                //else
+                //aim towards center
+            }
         }
     }
+
 
 
     private static class Utils {
