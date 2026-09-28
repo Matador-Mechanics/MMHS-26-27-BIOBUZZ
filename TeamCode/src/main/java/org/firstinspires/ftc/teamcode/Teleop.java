@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
-import org.firstinspires.ftc.teamcode.Robot.Subsystem.Drivetrain;
+import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 @TeleOp(name = "TeleOp", group = "TeleOp")
 public class Teleop extends OpMode {
