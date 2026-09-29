@@ -9,7 +9,9 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 public class DriveSubsystem extends SubsystemBase {
     private MotorEx fL, fR, bL, bR;
     private MecanumDrive dT;
-    DriveSubsystem(final HardwareMap hMap, final String frontLeft, final String frontRight, final String backLeft, final String backRight) {
+    private HardwareMap hMap = null;
+    DriveSubsystem(final HardwareMap hardwareMap, final String frontLeft, final String frontRight, final String backLeft, final String backRight) {
+        hMap = hardwareMap;
         fL = new MotorEx(hMap, frontLeft);
         fR = new MotorEx(hMap, frontRight);
         bL = new MotorEx(hMap, backLeft);
@@ -19,7 +21,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        dT.driveFieldCentric(hMap.Gamepad1);
+        dT.driveFieldCentric(hMap.);
     }
-
 }
