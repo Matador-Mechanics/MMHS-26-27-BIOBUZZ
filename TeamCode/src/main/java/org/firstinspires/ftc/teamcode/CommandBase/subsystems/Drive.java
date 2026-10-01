@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CommandBase;
+package org.firstinspires.ftc.teamcode.CommandBase.subsystems;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,13 +10,13 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class DriveSubsystem extends SubsystemBase {
+public class Drive extends SubsystemBase {
     private MotorEx fL, fR, bL, bR;
     private MecanumDrive dT;
     private GoBildaPinpointDriver Pinpoint;
     private HardwareMap hMap = null;
     private GamepadEx gamepad1 = null;
-    DriveSubsystem(final HardwareMap hardwareMap, final Gamepad gamepad, final String frontLeft, final String frontRight, final String backLeft, final String backRight, final String pinpoint) {
+    Drive(final HardwareMap hardwareMap, final Gamepad gamepad, final String frontLeft, final String frontRight, final String backLeft, final String backRight, final String pinpoint) {
         hMap = hardwareMap;
         gamepad1 = new GamepadEx(gamepad);
         fL = new MotorEx(hMap, frontLeft);

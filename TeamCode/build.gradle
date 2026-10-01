@@ -26,4 +26,5 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'com.skeletonarmyftc.marrow:core:1.1.2'
 }
