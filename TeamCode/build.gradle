@@ -24,7 +24,13 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
     implementation 'com.skeletonarmyftc.marrow:core:1.1.2'
+    implementation 'com.github.ori-coval.Koala-Log:KoalaLogger:1.5.7'
+    annotationProcessor 'com.github.ori-coval.Koala-Log:KoalaLoggingProcessor:1.5.7'
 }

@@ -4,6 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
+import Ori.Coval.Logging.AutoLog;
+import Ori.Coval.Logging.Logger.KoalaLog;
+
+@AutoLog
 @TeleOp(name = "TeleOp", group = "TeleOp")
 public class Teleop extends OpMode {
 
@@ -17,5 +21,9 @@ public class Teleop extends OpMode {
 
         GamepadEx gp1 = new GamepadEx(gamepad1);
         GamepadEx gp2 = new GamepadEx(gamepad2);
+    }
+    @Override
+    public void stop(){
+        KoalaLog.stop();
     }
 }
