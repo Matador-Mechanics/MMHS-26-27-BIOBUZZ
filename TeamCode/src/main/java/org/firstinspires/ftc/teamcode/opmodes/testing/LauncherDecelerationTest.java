@@ -43,7 +43,7 @@ public class LauncherDecelerationTest extends OpMode {
 
         try {
             myWriter = new FileWriter(filename);
-            myWriter.write("Log Start: "); // Header
+            myWriter.write("Log Start: ["); // Header
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -54,7 +54,7 @@ public class LauncherDecelerationTest extends OpMode {
     @Override
     public void start() {
         try (FileWriter myWriter = new FileWriter(filename, true)) {
-            myWriter.write("\n" + launcherMotor.getVelocity()); // Append velocity to file
+            myWriter.write("\n" + launcherMotor.getVelocity() + ", "); // Append velocity to file
             System.out.println("Successfully appended to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -77,7 +77,7 @@ public class LauncherDecelerationTest extends OpMode {
     @Override
     public void stop() {
         try (FileWriter myWriter = new FileWriter(filename, true)) {
-            myWriter.write("\n:Log End"); // Append velocity to file
+            myWriter.write("\n] :Log End"); // Append velocity to file
             System.out.println("Successfully appended to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
