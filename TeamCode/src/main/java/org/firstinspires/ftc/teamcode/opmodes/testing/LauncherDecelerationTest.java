@@ -54,7 +54,7 @@ public class LauncherDecelerationTest extends OpMode {
     @Override
     public void start() {
         try (FileWriter myWriter = new FileWriter(filename, true)) {
-            myWriter.write("\n" + launcherMotor.getVelocity() + ", "); // Append velocity to file
+            myWriter.write(data()); // Append velocity to file
             System.out.println("Successfully appended to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -66,7 +66,7 @@ public class LauncherDecelerationTest extends OpMode {
     @Override
     public void loop() {
         try (FileWriter myWriter = new FileWriter(filename, true)) {
-            myWriter.write("\n" + launcherMotor.getVelocity()); // Append velocity to file
+            myWriter.write(data()); // Append velocity to file
             System.out.println("Successfully appended to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -95,5 +95,8 @@ public class LauncherDecelerationTest extends OpMode {
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(new Date());
         String opModeName = this.toString();
         return timeStamp + "_" + opModeName + ".txt";
+    }
+    private String data() {
+        return "\n[" + launcherMotor.getVelocity() + ", " + System.nanoTime() + "]"; // getVelocity returns values of ticks per second and nanoTime should be able to provide timing offsets
     }
 }
