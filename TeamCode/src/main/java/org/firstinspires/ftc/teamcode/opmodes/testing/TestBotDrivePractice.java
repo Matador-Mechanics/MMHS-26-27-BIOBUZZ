@@ -38,9 +38,9 @@ public class TestBotDrivePractice extends OpMode {
 	public void loop() {
 		GP1 = new GamepadEx(gamepad1);
 		mecanumDrive.driveFieldCentric(GP1.getLeftX(), GP1.getLeftY(), GP1.getRightX(), pinpoint.getHeading(AngleUnit.DEGREES), true);
-		if (GP1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-			intake.set(1);
-		} else if (GP1.gamepad.right_trigger_pressed) {
+		if (GP1.gamepad.right_trigger_pressed) {
+			intake.set(GP1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
+		} else if (GP1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 			intake.set(-.5);
 		} else {
 			intake.set(0);
