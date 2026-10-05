@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.testing;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -17,10 +18,14 @@ public class TestBotDrivePractice extends OpMode {
 
 	@Override
 	public void init() {
-		fL = new MotorEx(hardwareMap, "fL");
-		fR = new MotorEx(hardwareMap, "fR");
-		bL = new MotorEx(hardwareMap, "bL");
-		bR = new MotorEx(hardwareMap, "bR");
+		fL = new MotorEx(hardwareMap, "frontLeft");
+		fL.motor.setDirection(DcMotorSimple.Direction.FORWARD);
+		fR = new MotorEx(hardwareMap, "frontRight");
+		fL.motor.setDirection(DcMotorSimple.Direction.FORWARD);
+		bL = new MotorEx(hardwareMap, "backLeft");
+		fL.motor.setDirection(DcMotorSimple.Direction.FORWARD);
+		bR = new MotorEx(hardwareMap, "backRight");
+		fL.motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 		mecanumDrive = new MecanumDrive(fL, fR, bL, bR);
 
