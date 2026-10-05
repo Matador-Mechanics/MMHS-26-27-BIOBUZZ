@@ -35,9 +35,11 @@ public class LauncherDecelerationTest extends OpMode {
                 System.out.println("File created: " + log.getName());
             } else {
                 System.out.println("File already exists.");
+                terminateOpModeNow();
             }
         } catch (IOException e) {
             System.out.println("An error occurred.");
+            terminateOpModeNow();
             e.printStackTrace(); // Print error details
         }
 
@@ -47,6 +49,7 @@ public class LauncherDecelerationTest extends OpMode {
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
+            terminateOpModeNow();
             e.printStackTrace();
         }
     }
@@ -58,6 +61,7 @@ public class LauncherDecelerationTest extends OpMode {
             System.out.println("Successfully appended to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
+            terminateOpModeNow();
             e.printStackTrace();
         }
         launcherMotor.setPower(0);
@@ -70,6 +74,7 @@ public class LauncherDecelerationTest extends OpMode {
             System.out.println("Successfully appended to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
+            terminateOpModeNow();
             e.printStackTrace();
         }
     }
