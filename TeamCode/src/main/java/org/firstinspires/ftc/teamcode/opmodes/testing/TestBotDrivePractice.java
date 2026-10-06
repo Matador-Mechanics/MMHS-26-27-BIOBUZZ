@@ -1,20 +1,23 @@
 package org.firstinspires.ftc.teamcode.opmodes.testing;
 
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
+import com.seattlesolvers.solverslib.gamepad.SlewRateLimiter;
+import com.seattlesolvers.solverslib.hardware.RevIMU;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+@TeleOp(name = "TestbotPractice", group = "Testing")
 
 public class TestBotDrivePractice extends OpMode {
 	MotorEx fL, fR, bL, bR, intake;
 	MecanumDrive mecanumDrive;
 	GamepadEx GP1;
-	GoBildaPinpointDriver pinpoint;
+	RevIMU IMU;
+	SlewRateLimiter IntakeSlew = new SlewRateLimiter(0.5);
 
 	@Override
 	public void init() {
@@ -30,16 +33,19 @@ public class TestBotDrivePractice extends OpMode {
 		mecanumDrive = new MecanumDrive(fL, fR, bL, bR);
 
 		intake = new MotorEx(hardwareMap, "intake");
+		intake.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+		IMU = new RevIMU(hardwareMap);
+		IMU.init();
 	}
 
 	@Override
 	public void loop() {
 		GP1 = new GamepadEx(gamepad1);
-		mecanumDrive.driveFieldCentric(GP1.getLeftX(), GP1.getLeftY(), GP1.getRightX(), pinpoint.getHeading(AngleUnit.DEGREES), true);
-		if (GP1.gamepad.right_trigger_pressed) {
-			intake.set(GP1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
+		double rTrig = IntakeSlew.calculate(GP1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
+		mecanumDrive.driveRobotCentric(GP1.getLeftX(), GP1.getLeftY(), GP1.getRightX(), true);
+		if (rTrig > 0.3) {
+			intake.set(rTrig);
 		} else if (GP1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 			intake.set(-.5);
 		} else {
