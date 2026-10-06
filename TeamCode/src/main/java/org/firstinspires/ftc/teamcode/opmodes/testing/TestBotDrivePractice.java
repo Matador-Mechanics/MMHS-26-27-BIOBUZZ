@@ -10,7 +10,7 @@ import com.seattlesolvers.solverslib.gamepad.SlewRateLimiter;
 import com.seattlesolvers.solverslib.hardware.RevIMU;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
-@TeleOp(name = "TestbotPractice", group = "Testing")
+@TeleOp(name = "TestBotPractice", group = "Testing")
 
 public class TestBotDrivePractice extends OpMode {
 	MotorEx fL, fR, bL, bR, intake;
