@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+@SuppressWarnings("CallToPrintStackTrace")
 @TeleOp(name = "VisionTesting", group = "Testing")
 public class LauncherDecelerationTest extends OpMode {
     File log;
@@ -64,7 +65,6 @@ public class LauncherDecelerationTest extends OpMode {
             terminateOpModeNow();
             e.printStackTrace();
         }
-        launcherMotor.setPower(0);
     }
 
     @Override
@@ -88,6 +88,8 @@ public class LauncherDecelerationTest extends OpMode {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+
+        launcherMotor.setPower(0);
 
         try {
             myWriter.close();
