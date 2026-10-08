@@ -1,23 +1,30 @@
 package org.firstinspires.ftc.teamcode.opmodes.testing;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
+
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.gamepad.SlewRateLimiter;
-import com.seattlesolvers.solverslib.hardware.RevIMU;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
-@TeleOp(name = "TestBotPractice", group = "Testing")
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+@Disabled
+@TeleOp(name = "TestBotPractice", group = "Testing")
 public class TestBotDrivePractice extends OpMode {
 	MotorEx fL, fR, bL, bR, intake;
 	MecanumDrive mecanumDrive;
 	GamepadEx GP1;
-	RevIMU IMU;
+	IMU imu;
+	IMU.Parameters imuParams;
 	SlewRateLimiter IntakeSlew = new SlewRateLimiter(0.5);
+	boolean robotDrive = true;
 
 	@Override
 	public void init() {
@@ -35,17 +42,26 @@ public class TestBotDrivePractice extends OpMode {
 		intake = new MotorEx(hardwareMap, "intake");
 		intake.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		IMU = new RevIMU(hardwareMap);
-		IMU.init();
+		imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+		imu.initialize(imuParams);
 	}
 
 	@Override
 	public void loop() {
 		GP1 = new GamepadEx(gamepad1);
 		double rTrig = IntakeSlew.calculate(GP1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
-		mecanumDrive.driveRobotCentric(GP1.getLeftX(), GP1.getLeftY(), GP1.getRightX(), true);
-		if (rTrig > 0.3) {
-			intake.set(rTrig);
+		if (GP1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+			robotDrive = !robotDrive;
+		}
+
+		if (robotDrive) {
+			mecanumDrive.driveRobotCentric(GP1.getRightX(), -GP1.getRightY(), GP1.getLeftX(), true);
+		} else {
+			mecanumDrive.driveFieldCentric(GP1.getRightX(), -GP1.getRightY(), GP1.getLeftX(), imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), true);
+		}
+
+		if (GP1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3) {
+			intake.set(GP1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 		} else if (GP1.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 			intake.set(-.5);
 		} else {
