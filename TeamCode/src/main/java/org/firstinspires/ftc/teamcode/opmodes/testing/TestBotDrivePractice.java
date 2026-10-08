@@ -22,7 +22,9 @@ public class TestBotDrivePractice extends OpMode {
 	MecanumDrive mecanumDrive;
 	GamepadEx GP1;
 	IMU imu;
-	IMU.Parameters imuParams;
+	IMU.Parameters imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(
+			RevHubOrientationOnRobot.LogoFacingDirection.UP,
+			RevHubOrientationOnRobot.UsbFacingDirection.LEFT));;
 	SlewRateLimiter IntakeSlew = new SlewRateLimiter(0.5);
 	boolean robotDrive = true;
 
@@ -42,8 +44,8 @@ public class TestBotDrivePractice extends OpMode {
 		intake = new MotorEx(hardwareMap, "intake");
 		intake.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
 		imu.initialize(imuParams);
+		imu.resetYaw();
 	}
 
 	@Override
