@@ -15,16 +15,13 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@Disabled
+//@Disabled
 @TeleOp(name = "TestBotPractice", group = "Testing")
 public class TestBotDrivePractice extends OpMode {
 	MotorEx fL, fR, bL, bR, intake;
 	MecanumDrive mecanumDrive;
 	GamepadEx GP1;
 	IMU imu;
-	IMU.Parameters imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(
-			RevHubOrientationOnRobot.LogoFacingDirection.UP,
-			RevHubOrientationOnRobot.UsbFacingDirection.LEFT));;
 	SlewRateLimiter IntakeSlew = new SlewRateLimiter(0.5);
 	boolean robotDrive = true;
 
@@ -44,7 +41,12 @@ public class TestBotDrivePractice extends OpMode {
 		intake = new MotorEx(hardwareMap, "intake");
 		intake.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		imu.initialize(imuParams);
+		imu = hardwareMap.get(IMU.class, "imu");
+
+		imu.initialize(new IMU.Parameters(
+				new RevHubOrientationOnRobot(
+						RevHubOrientationOnRobot.LogoFacingDirection.UP,
+						RevHubOrientationOnRobot.UsbFacingDirection.LEFT)));
 		imu.resetYaw();
 	}
 

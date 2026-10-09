@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.testing;
 
 import com.qualcomm.hardware.motors.RevRoboticsUltraPlanetaryHdHexMotor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @SuppressWarnings("CallToPrintStackTrace")
+@Disabled
 @TeleOp(name = "LauncherLogger", group = "Testing")
 public class LauncherDecelerationTest extends OpMode {
 	File log;
