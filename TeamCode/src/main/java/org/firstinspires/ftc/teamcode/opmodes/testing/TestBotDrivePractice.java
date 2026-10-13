@@ -15,7 +15,7 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-//@Disabled
+@Disabled
 @TeleOp(name = "TestBotPractice", group = "Testing")
 public class TestBotDrivePractice extends OpMode {
 	MotorEx fL, fR, bL, bR, intake;

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.testing;
 
 import com.qualcomm.hardware.motors.RevRoboticsUltraPlanetaryHdHexMotor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,14 +10,15 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
-@PsiKitAutoLog
-@Disabled
+@PsiKitAutoLog(rlogPort = 5800, rlogFolder = "/sdcard/FIRST/PsiKit/")
+//@Disabled
 @TeleOp(name = "LauncherLogger", group = "Testing")
 public class LauncherDecelerationTest extends OpMode {
 	DcMotorEx launcherMotor;
 
 	@Override
 	public void init() {
+		resetRuntime();
 		Logger.recordMetadata("Phase", "Init");
 
 		launcherMotor = hardwareMap.get(DcMotorEx.class, "launcherMotor");
@@ -32,7 +32,7 @@ public class LauncherDecelerationTest extends OpMode {
 	@Override
 	public void init_loop() {
 		Logger.recordOutput("Time", getRuntime());
-		Logger.recordOutput("Velocity ticks/sec", launcherMotor.getVelocity());
+		Logger.recordOutput("Velocity ticks per sec", getLauncherRPM());
 	}
 
 	@Override
@@ -43,15 +43,18 @@ public class LauncherDecelerationTest extends OpMode {
 	@Override
 	public void loop() {
 		Logger.recordOutput("Time", getRuntime());
-		Logger.recordOutput("Velocity ticks/sec", launcherMotor.getVelocity());
+		Logger.recordOutput("Velocity ticks per sec", getLauncherRPM());
 	}
 
 	@Override
 	public void stop() {
 		Logger.recordMetadata("Phase", "Stop");
 		Logger.recordOutput("Time", getRuntime());
-		Logger.recordOutput("Velocity ticks/sec", launcherMotor.getVelocity());
+		Logger.recordOutput("Velocity ticks per sec", getLauncherRPM());
 		launcherMotor.setPower(0);
+	}
 
+	private double getLauncherRPM() {
+		return launcherMotor.getVelocity() / 28 * 60;
 	}
 }
