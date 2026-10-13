@@ -8,106 +8,50 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.psilynx.psikit.core.Logger;
+import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-@SuppressWarnings("CallToPrintStackTrace")
+@PsiKitAutoLog
 @Disabled
 @TeleOp(name = "LauncherLogger", group = "Testing")
 public class LauncherDecelerationTest extends OpMode {
-	File log;
-	FileWriter myWriter;
 	DcMotorEx launcherMotor;
-	String filename = filename();
 
 	@Override
 	public void init() {
+		Logger.recordMetadata("Phase", "Init");
+
 		launcherMotor = hardwareMap.get(DcMotorEx.class, "launcherMotor");
 		launcherMotor.setMotorType(MotorConfigurationType.getMotorType(RevRoboticsUltraPlanetaryHdHexMotor.class));
 		launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 		launcherMotor.setPower(1);
 
-		try {
-			log = new File(AppUtil.FIRST_FOLDER, filename); // Create File object
-
-			if (!log.exists()) log.mkdirs();
-
-			if (log.createNewFile()) {  // Try to create the file
-				System.out.println("File created: " + log.getName());
-			} else {
-				System.out.println("File already exists.");
-			}
-
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace(); // Print error details
-		}
-
-		try {
-			myWriter = new FileWriter(filename);
-			myWriter.write("Log Start: ["); // Header
-			System.out.println("Successfully wrote to the file.");
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
+		Logger.recordMetadata("Phase", "Init_Loop");
+	}
+	@Override
+	public void init_loop() {
+		Logger.recordOutput("Time", getRuntime());
+		Logger.recordOutput("Velocity ticks/sec", launcherMotor.getVelocity());
 	}
 
 	@Override
 	public void start() {
-		try (FileWriter myWriter = new FileWriter(filename, true)) {
-			myWriter.write(data()); // Append velocity to file
-			System.out.println("Successfully appended to the file.");
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
+		Logger.recordMetadata("Phase", "Loop");
 	}
 
 	@Override
 	public void loop() {
-		try (FileWriter myWriter = new FileWriter(filename, true)) {
-			myWriter.write(data()); // Append velocity to file
-			System.out.println("Successfully appended to the file.");
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
+		Logger.recordOutput("Time", getRuntime());
+		Logger.recordOutput("Velocity ticks/sec", launcherMotor.getVelocity());
 	}
 
 	@Override
 	public void stop() {
-		try (FileWriter myWriter = new FileWriter(filename, true)) {
-			myWriter.write("\n] :Log End"); // Append velocity to file
-			System.out.println("Successfully appended to the file.");
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
-
+		Logger.recordMetadata("Phase", "Stop");
+		Logger.recordOutput("Time", getRuntime());
+		Logger.recordOutput("Velocity ticks/sec", launcherMotor.getVelocity());
 		launcherMotor.setPower(0);
 
-		try {
-			myWriter.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private String filename() { // Creates the file name
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(new Date());
-		String opModeName = this.toString();
-		return timeStamp + "_" + opModeName + ".txt";
-	}
-
-	private String data() {
-		return "\n[" + launcherMotor.getVelocity() + ", " + System.nanoTime() + "]"; // getVelocity returns values of ticks per second and nanoTime should be able to provide timing offsets
 	}
 }

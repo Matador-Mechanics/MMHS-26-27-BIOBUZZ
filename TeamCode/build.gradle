@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation 'com.skeletonarmyftc.marrow:core:1.1.2'
-    implementation 'com.github.ori-coval.Koala-Log:KoalaLogger:1.5.7'
-    annotationProcessor 'com.github.ori-coval.Koala-Log:KoalaLoggingProcessor:1.5.7'
+    implementation 'com.skeletonarmyftc.marrow:core:1.2.1'
+    implementation 'org.psilynx.psikit:core:0.2.0'
+    implementation 'org.psilynx.psikit:ftc:0.2.0'
 }
