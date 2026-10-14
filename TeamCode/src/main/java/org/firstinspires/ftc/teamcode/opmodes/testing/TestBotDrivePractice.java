@@ -14,7 +14,9 @@ import com.seattlesolvers.solverslib.gamepad.SlewRateLimiter;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
+@PsiKitAutoLog
 @Disabled
 @TeleOp(name = "TestBotPractice", group = "Testing")
 public class TestBotDrivePractice extends OpMode {
