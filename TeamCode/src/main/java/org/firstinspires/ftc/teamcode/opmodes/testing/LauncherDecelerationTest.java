@@ -21,8 +21,8 @@ import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 public class LauncherDecelerationTest extends OpMode {
 	DcMotorEx launcherMotor;
 	double dpad = 2750;
-	Gamepad gp1;
-	Gamepad oldgp1;
+	Gamepad gp1 = null;
+	Gamepad oldgp1 = null;
 
 	@Override
 	public void init() {
@@ -52,17 +52,21 @@ public class LauncherDecelerationTest extends OpMode {
 
 	@Override
 	public void loop() {
-		 oldgp1 = gp1;
+		oldgp1 = gp1;
 		gp1 = gamepad1;
-		if (!(gp1.dpad_up == oldgp1.dpad_up) || !(gp1.dpad_down == oldgp1.dpad_down)) {
-			if (gp1.dpad_up) dpad += 50;
-			if (gp1.dpad_down) dpad -= 50;
+		if (gamepad1.dpadUpWasPressed()) {
+			dpad += 50;
+		}
+		if (gamepad1.dpadDownWasPressed()) {
+			dpad -= 50;
 		}
 		launcherMotor.setVelocity(dpad * 28 / 60);
 		telemetry.addData("RPM", dpad);
 
 		Logger.recordOutput("Time", getRuntime());
 		Logger.recordOutput("Launcher RPM", getLauncherRPM());
+
+		telemetry.update();
 	}
 
 	@Override
