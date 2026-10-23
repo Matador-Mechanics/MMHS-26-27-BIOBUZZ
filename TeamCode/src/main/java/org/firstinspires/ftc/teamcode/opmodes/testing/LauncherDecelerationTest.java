@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -23,6 +24,7 @@ public class LauncherDecelerationTest extends OpMode {
 	double dpad = 2750;
 	Gamepad gp1 = null;
 	Gamepad oldgp1 = null;
+	 VoltageSensor voltageSensor;
 
 	@Override
 	public void init() {
@@ -35,12 +37,15 @@ public class LauncherDecelerationTest extends OpMode {
 		launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 		launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+		voltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
+
 		Logger.recordMetadata("Phase", "Init_Loop");
 	}
 	@Override
 	public void init_loop() {
 		Logger.recordOutput("Time", getRuntime());
 		Logger.recordOutput("Launcher RPM", getLauncherRPM());
+		Logger.recordOutput("Voltage", voltageSensor.getVoltage());
 	}
 
 	@Override
@@ -65,6 +70,7 @@ public class LauncherDecelerationTest extends OpMode {
 
 		Logger.recordOutput("Time", getRuntime());
 		Logger.recordOutput("Launcher RPM", getLauncherRPM());
+		Logger.recordOutput("Voltage", voltageSensor.getVoltage());
 
 		telemetry.update();
 	}
@@ -74,6 +80,7 @@ public class LauncherDecelerationTest extends OpMode {
 		Logger.recordMetadata("Phase", "Stop");
 		Logger.recordOutput("Time", getRuntime());
 		Logger.recordOutput("Launcher RPM", getLauncherRPM());
+		Logger.recordOutput("Voltage", voltageSensor.getVoltage());
 		launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		launcherMotor.setPower(0);
 		Logger.recordMetadata("Phase", "Spool down");
