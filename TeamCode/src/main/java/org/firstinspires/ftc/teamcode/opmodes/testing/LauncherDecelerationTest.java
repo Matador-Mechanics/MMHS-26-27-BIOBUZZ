@@ -57,12 +57,18 @@ public class LauncherDecelerationTest extends OpMode {
 
 	@Override
 	public void loop() {
-		oldgp1 = gp1;
 		gp1 = gamepad1;
-		if (gamepad1.dpadUpWasPressed()) {
+		if (gp1.triangleWasPressed()) {
+			if (launcherMotor.getDirection() == DcMotorSimple.Direction.REVERSE){
+				launcherMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+			} else {
+				launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+			}
+		}
+		if (gp1.dpadUpWasPressed()) {
 			dpad += 50;
 		}
-		if (gamepad1.dpadDownWasPressed()) {
+		if (gp1.dpadDownWasPressed()) {
 			dpad -= 50;
 		}
 		launcherMotor.setVelocity(dpad * 28 / 60);
