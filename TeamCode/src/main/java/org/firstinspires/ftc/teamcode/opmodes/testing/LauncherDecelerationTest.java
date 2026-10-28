@@ -9,10 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-import com.seattlesolvers.solverslib.gamepad.GamepadEx;
-import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
@@ -20,10 +17,9 @@ import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 //@Disabled
 @TeleOp(name = "LauncherLogger", group = "Testing")
 public class LauncherDecelerationTest extends OpMode {
-	DcMotorEx launcherMotor;
+	DcMotorEx NectarMotor, PollenMotor;
 	double dpad = 2750;
 	Gamepad gp1 = null;
-	Gamepad oldgp1 = null;
 	 VoltageSensor voltageSensor;
 
 	@Override
@@ -31,11 +27,17 @@ public class LauncherDecelerationTest extends OpMode {
 		resetRuntime();
 		Logger.recordMetadata("Phase", "Init");
 
-		launcherMotor = hardwareMap.get(DcMotorEx.class, "launcherMotor");
-		launcherMotor.setMotorType(MotorConfigurationType.getMotorType(RevRoboticsUltraPlanetaryHdHexMotor.class));
-		launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-		launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+		NectarMotor = hardwareMap.get(DcMotorEx.class, "NectarMotor");
+		NectarMotor.setMotorType(MotorConfigurationType.getMotorType(RevRoboticsUltraPlanetaryHdHexMotor.class));
+		NectarMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		NectarMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+		NectarMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+		PollenMotor = hardwareMap.get(DcMotorEx.class, "PollenMotor");
+		PollenMotor.setMotorType(MotorConfigurationType.getMotorType(RevRoboticsUltraPlanetaryHdHexMotor.class));
+		PollenMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		PollenMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+		PollenMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 		voltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
@@ -44,13 +46,14 @@ public class LauncherDecelerationTest extends OpMode {
 	@Override
 	public void init_loop() {
 		Logger.recordOutput("Time", getRuntime());
-		Logger.recordOutput("Launcher RPM", getLauncherRPM());
+		Logger.recordOutput("Nectar RPM", getNectarRPM());
+		Logger.recordOutput("Pollen RPM", getPollenRPM());
 		Logger.recordOutput("Voltage", voltageSensor.getVoltage());
 	}
 
 	@Override
 	public void start() {
-		//launcherMotor.setPower(1);
+		//NectarMotor.setPower(1);
 		gp1 = gamepad1;
 		Logger.recordMetadata("Phase", "Loop");
 	}
@@ -58,24 +61,20 @@ public class LauncherDecelerationTest extends OpMode {
 	@Override
 	public void loop() {
 		gp1 = gamepad1;
-		if (gp1.triangleWasPressed()) {
-			if (launcherMotor.getDirection() == DcMotorSimple.Direction.REVERSE){
-				launcherMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-			} else {
-				launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-			}
-		}
 		if (gp1.dpadUpWasPressed()) {
 			dpad += 50;
 		}
 		if (gp1.dpadDownWasPressed()) {
 			dpad -= 50;
 		}
-		launcherMotor.setVelocity(dpad * 28 / 60);
+		double velocity = dpad * 28 / 60;
+		NectarMotor.setVelocity(velocity);
+		PollenMotor.setVelocity(velocity);
 		telemetry.addData("RPM", dpad);
 
 		Logger.recordOutput("Time", getRuntime());
-		Logger.recordOutput("Launcher RPM", getLauncherRPM());
+		Logger.recordOutput("Nectar RPM", getNectarRPM());
+		Logger.recordOutput("Pollen RPM", getPollenRPM());
 		Logger.recordOutput("Voltage", voltageSensor.getVoltage());
 
 		telemetry.update();
@@ -85,14 +84,22 @@ public class LauncherDecelerationTest extends OpMode {
 	public void stop() {
 		Logger.recordMetadata("Phase", "Stop");
 		Logger.recordOutput("Time", getRuntime());
-		Logger.recordOutput("Launcher RPM", getLauncherRPM());
+		Logger.recordOutput("Nectar RPM", getNectarRPM());
+		Logger.recordOutput("Pollen RPM", getPollenRPM());
 		Logger.recordOutput("Voltage", voltageSensor.getVoltage());
-		launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		launcherMotor.setPower(0);
+		NectarMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		PollenMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		Logger.recordMetadata("Phase", "Spool down");
+		NectarMotor.setPower(0);
+		PollenMotor.setPower(0);
+		Logger.recordMetadata("Phase", "End of Execution");
 	}
 
-	private double getLauncherRPM() {
-		return launcherMotor.getVelocity() / 28 * 60;
+	private double getNectarRPM() {
+		return NectarMotor.getVelocity() / 28 * 60;
+	}
+
+	private double getPollenRPM() {
+		return PollenMotor.getVelocity() / 28 * 60;
 	}
 }
