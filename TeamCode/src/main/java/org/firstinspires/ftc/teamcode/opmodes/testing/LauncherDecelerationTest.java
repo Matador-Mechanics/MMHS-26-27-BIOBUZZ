@@ -31,13 +31,13 @@ public class LauncherDecelerationTest extends OpMode {
 		NectarMotor.setMotorType(MotorConfigurationType.getMotorType(RevRoboticsUltraPlanetaryHdHexMotor.class));
 		NectarMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		NectarMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-		NectarMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+		NectarMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 		PollenMotor = hardwareMap.get(DcMotorEx.class, "PollenMotor");
 		PollenMotor.setMotorType(MotorConfigurationType.getMotorType(RevRoboticsUltraPlanetaryHdHexMotor.class));
 		PollenMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		PollenMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-		PollenMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+		PollenMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		voltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
