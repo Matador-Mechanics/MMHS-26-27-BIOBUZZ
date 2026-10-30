@@ -14,8 +14,8 @@ public class Drive extends SubsystemBase {
     private MotorEx fL, fR, bL, bR;
     private MecanumDrive dT;
     private GoBildaPinpointDriver Pinpoint;
-    private HardwareMap hMap = null;
-    private GamepadEx gamepad1 = null;
+    private HardwareMap hMap;
+    private GamepadEx gamepad1;
     Drive(final HardwareMap hardwareMap, final Gamepad gamepad, final String frontLeft, final String frontRight, final String backLeft, final String backRight, final String pinpoint) {
         hMap = hardwareMap;
         gamepad1 = new GamepadEx(gamepad);
