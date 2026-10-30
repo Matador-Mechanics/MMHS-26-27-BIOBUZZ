@@ -20,7 +20,7 @@ public class LauncherDecelerationTest extends OpMode {
 	DcMotorEx NectarMotor, PollenMotor;
 	double dpad = 2750;
 	Gamepad gp1 = null;
-	 VoltageSensor voltageSensor;
+	VoltageSensor voltageSensor;
 
 	@Override
 	public void init() {
@@ -43,6 +43,7 @@ public class LauncherDecelerationTest extends OpMode {
 
 		Logger.recordMetadata("Phase", "Init_Loop");
 	}
+
 	@Override
 	public void init_loop() {
 		Logger.recordOutput("Time", getRuntime());
