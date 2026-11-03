@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes.testing;
 
 import com.qualcomm.hardware.motors.RevRoboticsUltraPlanetaryHdHexMotor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,7 +16,7 @@ import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
 @PsiKitAutoLog(rlogPort = 5800, rlogFolder = "/sdcard/FIRST/PsiKit/")
-//@Disabled
+@Disabled
 @TeleOp(name = "LauncherLogger", group = "Testing")
 public class LauncherDecelerationTest extends OpMode {
 	DcMotorEx NectarMotor, PollenMotor;

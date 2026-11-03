@@ -47,12 +47,12 @@ public class Auto extends LinearOpMode {
 
 		while (!isStarted()) {
 			List<LLResultTypes.FiducialResult> tags = limelight.getLatestResult().getFiducialResults();
-			for (i = 0, i > tags.size(), i++) {
-				LLResultTypes.FiducialResult tag = tags.get(i);
-				if (tag.getFiducialId() == 6 /* arbitrary for now */){
-					hiveSide = HiveSide.RED;
-				}
-			}
+//			for (i = 0, i > tags.size(), i++) {
+//				LLResultTypes.FiducialResult tag = tags.get(i);
+//				if (tag.getFiducialId() == 6 /* arbitrary for now */){
+//					hiveSide = HiveSide.RED;
+//				}
+//			}
 		}
 		waitForStart();
 	}
