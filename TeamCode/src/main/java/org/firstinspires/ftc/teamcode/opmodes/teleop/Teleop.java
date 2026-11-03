@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
-import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
 @PsiKitAutoLog
@@ -20,7 +21,7 @@ public class Teleop extends OpMode {
     MotorEx fL, fR, bL, bR;
     MecanumDrive mecanumDrive;
     GamepadEx GP1;
-    boolean robotDrive = true;
+    VoltageSensor voltageSensor;
 
     @Override
     public void init() {
@@ -34,6 +35,8 @@ public class Teleop extends OpMode {
         fL.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mecanumDrive = new MecanumDrive(fL, fR, bL, bR);
+
+        voltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
     }
 
     @Override
@@ -43,6 +46,11 @@ public class Teleop extends OpMode {
     }
     @Override
     public void stop(){
+        fL.motor.setPower(motorVoltage(5));
 
+    }
+
+    public double motorVoltage(double volts){
+        return volts/voltageSensor.getVoltage();
     }
 }
