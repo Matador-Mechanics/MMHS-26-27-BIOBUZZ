@@ -1,20 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes.testing;
 
-import com.qualcomm.hardware.motors.RevRoboticsUltraPlanetaryHdHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Utility;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
@@ -22,16 +15,17 @@ import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 @PsiKitAutoLog(rlogPort = 5800, rlogFolder = "/sdcard/FIRST/PsiKit/")
 @Disabled
 @TeleOp(name = "LauncherLogger", group = "Testing")
-public class LauncherDecelerationTest extends OpMode {
+public class LauncherTest extends OpMode {
 	MotorEx NectarMotor, PollenMotor;
 	double dpad = 2750;
 	Gamepad gp1 = null;
 	VoltageSensor voltageSensor;
+	double velocity = 0;
 
 	@Override
 	public void init() {
 		resetRuntime();
-		Logger.recordMetadata("Phase", "Init");
+		Logger.recordOutput("Phase", "Init");
 
 		NectarMotor = new MotorEx(hardwareMap, "NectarMotor");
 		NectarMotor.setRunMode(Motor.RunMode.VelocityControl);
@@ -45,7 +39,7 @@ public class LauncherDecelerationTest extends OpMode {
 
 		voltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
-		Logger.recordMetadata("Phase", "Init_Loop");
+		Logger.recordOutput("Phase", "Init_Loop");
 	}
 
 	@Override
@@ -55,7 +49,7 @@ public class LauncherDecelerationTest extends OpMode {
 
 	@Override
 	public void start() {
-		Logger.recordMetadata("Phase", "Loop");
+		Logger.recordOutput("Phase", "Loop");
 	}
 
 	@Override
@@ -67,7 +61,7 @@ public class LauncherDecelerationTest extends OpMode {
 		if (gp1.dpadDownWasPressed()) {
 			dpad -= 50;
 		}
-		double velocity = dpad * 28 / 60;
+		velocity = dpad * 28 / 60;
 		NectarMotor.setVelocity(velocity);
 		PollenMotor.setVelocity(velocity);
 		telemetry.addData("RPM", dpad);
@@ -79,14 +73,14 @@ public class LauncherDecelerationTest extends OpMode {
 
 	@Override
 	public void stop() {
-		Logger.recordMetadata("Phase", "Stop");
+		Logger.recordOutput("Phase", "Stop");
 		logger();
 		NectarMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 		PollenMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		Logger.recordMetadata("Phase", "Spool down");
+		Logger.recordOutput("Phase", "Spool down");
 		NectarMotor.setVelocity(0);
 		PollenMotor.setVelocity(0);
-		Logger.recordMetadata("Phase", "End of Execution");
+		Logger.recordOutput("Phase", "End of Execution");
 	}
 
 	private double getNectarRPM() {
@@ -103,6 +97,6 @@ public class LauncherDecelerationTest extends OpMode {
 		Logger.recordOutput("Pollen RPM", getPollenRPM());
 		Logger.recordOutput("Nectar Current", NectarMotor.getCurrent(CurrentUnit.AMPS));
 		Logger.recordOutput("Pollen Current", PollenMotor.getCurrent(CurrentUnit.AMPS));
-		Logger.recordOutput("Voltage", voltageSensor.getVoltage()); 
+		Logger.recordOutput("Voltage", voltageSensor.getVoltage());
 	}
 }
