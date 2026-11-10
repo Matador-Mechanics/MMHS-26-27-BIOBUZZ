@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.globals.constants;
 import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
-@PsiKitAutoLog
+@PsiKitAutoLog(rlogPort = 5800, rlogFolder = "/sdcard/FIRST/PsiKit/")
 //@Disabled
 @TeleOp(name = "TeleOp", group = "TeleOp")
 public class Teleop extends OpMode {
@@ -28,6 +28,8 @@ public class Teleop extends OpMode {
 
     @Override
     public void init() {
+        Logger.start();
+        resetRuntime();
         fL = new MotorEx(hardwareMap, "frontLeft");
         fL.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         fR = new MotorEx(hardwareMap, "frontRight");
@@ -55,6 +57,11 @@ public class Teleop extends OpMode {
     }
 
     @Override
+    public void init_loop() {
+        logger();
+    }
+
+    @Override
     public void loop() {
         logger();
         GP1Old = GP1;
@@ -72,9 +79,6 @@ public class Teleop extends OpMode {
         } else {
             PollenMotor.stopMotor();
         }
-    }
-    @Override
-    public void stop(){
     }
 
     public double motorVoltage(double volts){
@@ -101,9 +105,9 @@ public class Teleop extends OpMode {
     public double ticksToVelocity(double RPM, double gearRatio) {
         return RPM * gearRatio * 28 / 60 ;
     }
-    public void logger(){
+    public void logger() {
         Logger.recordOutput("Time", getRuntime());
-        Logger.recordOutput("Intake RPM", ticksToVelocity(IntakeMotor.getVelocity(), 5));
-        Logger.recordOutput("Pollen RPM", ticksToVelocity(PollenMotor.getVelocity(), 1));
+        Logger.recordOutput("Intake RPM", IntakeMotor.getVelocity() / (5.0 * 28 * 60));
+        Logger.recordOutput("Pollen RPM", PollenMotor.getVelocity() / (28 * 60));
     }
 }
