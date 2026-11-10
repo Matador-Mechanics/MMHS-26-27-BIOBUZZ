@@ -91,7 +91,7 @@ public class LauncherTest extends OpMode {
 		return PollenMotor.getVelocity() / 28 * 60;
 	}
 
-	private void logger(){
+	private void logger() {
 		Logger.recordOutput("Time", getRuntime());
 		Logger.recordOutput("Nectar RPM", getNectarRPM());
 		Logger.recordOutput("Pollen RPM", getPollenRPM());

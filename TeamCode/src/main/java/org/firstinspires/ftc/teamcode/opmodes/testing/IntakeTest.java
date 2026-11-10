@@ -80,7 +80,7 @@ public class IntakeTest extends OpMode {
 		return IntakeMotor.getVelocity() / 28 * 60 * GR;
 	}
 
-	private void logger(){
+	private void logger() {
 		Logger.recordOutput("Time", getRuntime());
 		Logger.recordOutput("Intake RPM", getIntakeRPM());
 		Logger.recordOutput("Intake Current", IntakeMotor.getCurrent(CurrentUnit.AMPS));

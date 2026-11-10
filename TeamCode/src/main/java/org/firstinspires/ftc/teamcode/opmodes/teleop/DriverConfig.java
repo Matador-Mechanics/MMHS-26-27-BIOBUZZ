@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
+
 import org.firstinspires.ftc.teamcode.globals.constants.Driver;
+
 @Utility
 public class DriverConfig extends OpMode {
 	public int line = 0;
