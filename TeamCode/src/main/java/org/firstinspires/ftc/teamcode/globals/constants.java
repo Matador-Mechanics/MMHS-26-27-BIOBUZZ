@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.globals;
 import java.util.Map;
 
 public class constants {
+	public static final int rlogPort = 5500;
 	public enum Alliance {
 		BLUE,
 		RED,
@@ -38,5 +39,5 @@ public class constants {
 			Map.entry("pinpoint", "pinpoint")
 	);
 
-	public static final double INTAKESPEED = 1000; //RPM
+	public static final double INTAKESPEED = 500; //RPM
 }

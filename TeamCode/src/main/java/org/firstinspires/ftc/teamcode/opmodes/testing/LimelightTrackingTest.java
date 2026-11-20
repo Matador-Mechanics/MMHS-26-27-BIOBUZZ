@@ -7,17 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.globals.constants;
 import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
-@PsiKitAutoLog
+@PsiKitAutoLog(rlogPort = constants.rlogPort)
 @Autonomous(name = "LimelightTrackingTest")
 public class LimelightTrackingTest extends LinearOpMode {
 
 	Limelight3A limelight;
 	private Servo limelightServo;
 
-	long sleepTime = 1;
+	long sleepTime = 1000 / 6;
 	double power = .35;
 
 	double txMax = 15;
@@ -27,9 +28,9 @@ public class LimelightTrackingTest extends LinearOpMode {
 	double taMax = 2.35;
 	double taMin = 2.07;
 	double degree = 0;
-	double MaxDegree = 330; //330 max for our GoBilda servos, 270 for rev
+	double maxDegree = 300; //300 max for our GoBilda servos, 270 for rev
 	double multiplier = .5;
-	double servoInPut = degree / MaxDegree;
+	double servoInput = degree / maxDegree;
 
 
 	@Override
@@ -40,12 +41,9 @@ public class LimelightTrackingTest extends LinearOpMode {
 		limelight.start(); // This tells Limelight to start looking!
 		limelightServo = hardwareMap.get(Servo.class, "limelightServo");
 
-
 		limelight.pipelineSwitch(0);
 
-
 		waitForStart();
-
 
 		while (opModeIsActive()) {
 			telemetry.update();
@@ -75,61 +73,68 @@ public class LimelightTrackingTest extends LinearOpMode {
 			Logger.recordOutput("Target Area", ta);
 			Logger.recordOutput("Estimated angle (degree)", degree);
 			telemetry.update();
-
-			if (tx < txMin) {
-				// turn right
-				degree -= multiplier * (Math.abs((tx + 9.5) / 19.5));
-				if (degree <= 0) {
-					degree = 0;
-				} else if (degree >= MaxDegree) {
-					degree = MaxDegree;
-				}
-				servoInPut = degree / MaxDegree;
-				limelightServo.setPosition(servoInPut);
-				sleep(sleepTime);
-			} else if (tx > txMax) {
-				//turn left
-				degree += multiplier * (Math.abs((tx + 9.5) / 19.5));
-				if (degree <= 0) {
-					degree = 0;
-				} else if (degree >= MaxDegree) {
-					degree = MaxDegree;
-				}
-				servoInPut = degree / MaxDegree;
-				limelightServo.setPosition(servoInPut);
-				sleep(sleepTime);
-
-			} else if (ta > taMax) {
-				//move backward
-
-			} else if (ta < taMin) {
-				//move Forward
-				//TODO:  ^^^  this year we won't be moving the physical bot but instead varying launcher velocity based on distance
-				// so this should be a distance to velocity LUT - G
-
+			
+			degree += tx;
+			if (degree / 300 > 1) {
+				servoInput = degree % maxDegree;
 			} else {
-				telemetry.addData("done", 0);
+				servoInput = degree;
 			}
+			limelightServo.setPosition(servoInput);
+			sleep(sleepTime);
+
+//			if (tx < txMin) {
+//				// turn right
+//				degree -= multiplier * (Math.abs((tx + 9.5) / 19.5));
+//				if (degree <= 0) {
+//					degree = 0;
+//				} else if (degree >= MaxDegree) {
+//					degree = MaxDegree;
+//				}
+//				servoInput = degree / MaxDegree;
+//				limelightServo.setPosition(servoInput);
+//				sleep(sleepTime);
+//			} else if (tx > txMax) {
+//				//turn left
+//				degree += multiplier * (Math.abs((tx + 9.5) / 19.5));
+//				if (degree <= 0) {
+//					degree = 0;
+//				} else if (degree >= MaxDegree) {
+//					degree = MaxDegree;
+//				}
+//				servoInput = degree / MaxDegree;
+//				limelightServo.setPosition(servoInput);
+//				sleep(sleepTime);
+//
+//			} else if (ta > taMax) {
+//				//move backward
+//
+//			} else if (ta < taMin) {
+//				//move Forward
+//				//TODO:  ^^^  this year we won't be moving the physical bot but instead varying launcher velocity based on distance
+//				// so this should be a distance to velocity LUT - G
+//
+//			} else {
+//				telemetry.addData("done", 0);
+//			}
 
 		} else {
 			telemetry.addData("Limelight", "No Targets");
-
-
 		}
 	}
 
-	double normalizer(double tx) {
-		//TODO: Don't use this unless currently used tx min and max code is removed, this function should mostly be a drop in replacement
-		if (tx > txMax) {
-			txMax = tx;
-		} else if (tx > txMin) {
-			txMin = tx;
-		}
-		// where we update the centerpoint for the normalizer, we want to take both bounds and get the point between them (presumably where the camera's centerpoint is)
-		double centerpoint = (txMax + txMin) / 2;
-
-		// where we actually want to normalize the input tx to the normalized output from 1 to 0
-		return tx;
-		// TODO: Replace with the actual code.
-	}
+//	double normalizer(double tx) {
+//		//TODO: Don't use this unless currently used tx min and max code is removed, this function should mostly be a drop in replacement
+//		if (tx > txMax) {
+//			txMax = tx;
+//		} else if (tx > txMin) {
+//			txMin = tx;
+//		}
+//		// where we update the centerpoint for the normalizer, we want to take both bounds and get the point between them (presumably where the camera's centerpoint is)
+//		double centerpoint = (txMax + txMin) / 2;
+//
+//		// where we actually want to normalize the input tx to the normalized output from 1 to 0
+//		return tx;
+//		// TODO: Replace with the actual code.
+//	}
 }

@@ -10,6 +10,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
+import com.seattlesolvers.solverslib.util.MathUtils;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.commandBase.subsystems.Drive;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.globals.constants;
 import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.autolog.PsiKitAutoLog;
 
-@PsiKitAutoLog(rlogPort = 5800, rlogFolder = "/sdcard/FIRST/PsiKit/")
+@PsiKitAutoLog(rlogPort = constants.rlogPort, rlogFolder = "/sdcard/FIRST/PsiKit/")
 //@Disabled
 @TeleOp(name = "TeleOp", group = "TeleOp")
 public class Teleop extends OpMode {
@@ -48,7 +49,7 @@ public class Teleop extends OpMode {
 
 		mecanumDrive = new MecanumDrive(fL, fR, bL, bR);
 
-		IntakeMotor = new MotorEx(hardwareMap, "IntakeMotor");
+		IntakeMotor = new MotorEx(hardwareMap, constants.hardwareStrings.get("intakeMotor"));
 		IntakeMotor.setRunMode(Motor.RunMode.VelocityControl);
 		IntakeMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
 		IntakeMotor.setInverted(false);
@@ -56,12 +57,12 @@ public class Teleop extends OpMode {
 		PollenMotor = new MotorEx(hardwareMap, constants.hardwareStrings.get("pollenMotor"));
 		PollenMotor.setRunMode(Motor.RunMode.VelocityControl);
 		PollenMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
-		PollenMotor.setInverted(true);
+		PollenMotor.setInverted(false);
 
 		NectarMotor = new MotorEx(hardwareMap, constants.hardwareStrings.get("nectarMotor"));
 		NectarMotor.setRunMode(Motor.RunMode.VelocityControl);
 		NectarMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
-		NectarMotor.setInverted(false);
+		NectarMotor.setInverted(true);
 
 		PollenDoor =  hardwareMap.get(Servo.class, constants.hardwareStrings.get("pollenDoor"));
 
@@ -86,7 +87,7 @@ public class Teleop extends OpMode {
 			drive();
 		}
 		if (GP1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
-			IntakeMotor.setVelocity(ticksToVelocity(constants.INTAKESPEED, 5));
+			IntakeMotor.setVelocity(ticksToVelocity(2000 * MathUtils.clamp(GP1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER), 0.1, 1), 5));
 		} else {
 			IntakeMotor.stopMotor();
 		}
@@ -114,24 +115,24 @@ public class Teleop extends OpMode {
 	}
 
 	public void drive() {
-		if (GP1.getRightX() != 0) {
-			if (Math.signum(GP1.getRightX()) != Math.signum(GP1Old.getRightX())) {
-				mecanumDrive.stop();
-			}
-		} else if (GP1.getRightY() != 0) {
-			if (Math.signum(GP1.getRightY()) != Math.signum(GP1Old.getRightY())) {
-				mecanumDrive.stop();
-			}
-		} else if (GP1.getLeftX() != 0) {
-			if (Math.signum(GP1.getLeftX()) != Math.signum(GP1Old.getLeftX())) {
-				mecanumDrive.stop();
-			}
-		} else {
+//		if (GP1.getRightX() != 0) {
+//			if (Math.signum(GP1.getRightX()) != Math.signum(GP1Old.getRightX())) {
+//				mecanumDrive.stop();
+//			}
+//		} else if (GP1.getRightY() != 0) {
+//			if (Math.signum(GP1.getRightY()) != Math.signum(GP1Old.getRightY())) {
+//				mecanumDrive.stop();
+//			}
+//		} else if (GP1.getLeftX() != 0) {
+//			if (Math.signum(GP1.getLeftX()) != Math.signum(GP1Old.getLeftX())) {
+//				mecanumDrive.stop();
+//			}
+//		} else {
 			double rX = deadzone(GP1.getRightX());
 			double rY = deadzone(GP1.getRightY());
 			double lX = deadzone(GP1.getLeftX());
 			mecanumDrive.driveRobotCentric(rX, -rY, lX, false);
-		}
+//		}
 	}
 
 	public double ticksToVelocity(double RPM, double gearRatio) {
